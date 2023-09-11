@@ -112,7 +112,25 @@ def pagar_vehiculo():
     print(valor_a_pagar)
     print("\n <<<<<<<<<<<<<<<<>>>>>>>>>>>>>>")
     print("Automóvil actualizado con éxito.")
-    
+def administracion():   
+    c = conn.cursor()
+    c.execute("SELECT * FROM tabla_vehiculos")
+    list = c.fetchall()
+    for vehiculo in list:
+        id, patente, nombre, telefono, departamento, fecha_ingreso, fecha_salida, tiempo_estacionado, tarifa, valor_a_pagar, comentario, last_mond = vehiculo
+        print("\n******************************")
+        print(f"id: {id}")
+        print(f"Patente: {patente}")
+        print(f"Nombre: {nombre}")
+        print(f"Teléfono: {telefono}")
+        print(f"Departamento visitado: {departamento}")
+        print(f"Fecha/Hora de Ingreso: {fecha_ingreso}")
+        print(f"Fecha/Hora de Salida: {fecha_salida}")
+        print(f"Tiempo Estacionado: {tiempo_estacionado}")
+        print(f"Tarifa: {tarifa}")
+        print(f"Valor a Pagar: {valor_a_pagar}")
+        print(f"Comentario: {comentario}")
+        print("******************************") 
 while True:
     print("==========================================")
     print("Bienvenido al sistema de gestión de vehículos")
@@ -133,9 +151,11 @@ while True:
         mostrar_vehiculos_pagados()
     elif opcion == "4":
         pagar_vehiculo()
+    elif  opcion == "6":
+        administracion()
     elif opcion == "5":  
         print("Saliendo del sistema...")
-        print("\n")  
+        print("\n")
         break
     else:
         print("Opción inválida. Por favor, seleccione una opción válida.")
