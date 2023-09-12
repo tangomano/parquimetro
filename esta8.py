@@ -2,6 +2,9 @@ import sqlite3
 import datetime
 from datetime import datetime
 import math
+import numpy as np
+import pandas as pd
+from tabulate import tabulate
 conn = sqlite3.connect('vehiculos.db')
 c = conn.cursor()
 c.execute('''CREATE TABLE IF NOT EXISTS tabla_vehiculos
@@ -45,17 +48,9 @@ def mostrar_vehiculos_in():
         print("......................") 
         print("\n")       
     else:
-        for vehiculo in list:
-            id, patente, nombre, telefono, departamento, fecha_ingreso, fecha_salida, tiempo_estacionado, tarifa, valor_a_pagar, comentario, last_mod = vehiculo
-            print("\n===========================")
-            print("Listado de vehículos:")
-            print(f"\nid: {id}")
-            print(f"Patente: {patente}")
-            print(f"Nombre: {nombre}")
-            print(f"Teléfono: {telefono}")
-            print(f"Departamento visitado: {departamento}")
-            print(f"Fecha/Hora de Ingreso: {fecha_ingreso}")
-            print("------------------------")
+        print("\n")
+        print(tabulate(list, headers=['id','patente','nombre','telefono','departamento','fecha_ingreso','fecha_salida','tiempo_estacionado','tarifa','valor_a_pagar','comentario','last_mod'], 
+                       tablefmt='pipe_tables'))
 def mostrar_vehiculos_pagados():
     c = conn.cursor()
     c.execute("SELECT * FROM tabla_vehiculos WHERE fecha_salida IS NOT NULL")
@@ -66,22 +61,9 @@ def mostrar_vehiculos_pagados():
         print("......................") 
         print("\n")
     else:
-        for vehiculo in list:
-            id, patente, nombre, telefono, departamento, fecha_ingreso, fecha_salida, tiempo_estacionado, tarifa, valor_a_pagar, comentario, last_mond = vehiculo
-            print("\n===========================")
-            print("\nVehículos con Salida Registrada:")
-            print(f"\nid: {id}")
-            print(f"Patente: {patente}")
-            print(f"Nombre: {nombre}")
-            print(f"Teléfono: {telefono}")
-            print(f"Departamento visitado: {departamento}")
-            print(f"Fecha/Hora de Ingreso: {fecha_ingreso}")
-            print(f"Fecha/Hora de Salida: {fecha_salida}")
-            print(f"Tiempo Estacionado: {tiempo_estacionado}")
-            print(f"Tarifa: {tarifa}")
-            print(f"Valor a Pagar: {valor_a_pagar}")
-            print(f"Comentario: {comentario}")
-            print("------------------------")
+        print("\n")
+        print(tabulate(list, headers=['id','patente','nombre','telefono','departamento','fecha_ingreso','fecha_salida','tiempo_estacionado','tarifa','valor_a_pagar','comentario','last_mod'], 
+                       tablefmt='pipe_tables'))
 def pagar_vehiculo():
     c = conn.cursor()
     saliente = int(input(f"Ingrese id del vehiculo: "))
@@ -98,7 +80,7 @@ def pagar_vehiculo():
     comentario = input(f"Ingrese comentario: ")
 ## al leer el ingreso (str) debeo cambiar a datetime   
     fecha_ingreso_DT = datetime.strptime(fecha_ingreso, "%Y-%m-%d %H:%M")
-    fecha_salida1 = datetime.now().strftime("%Y-%m-%d %H:%M")
+    fecha_salida1 = datetime.now()    ##.strftime("%Y-%m-%d %H:%M")
     fecha_salida = datetime.now().strptime(fecha_salida1, "%Y-%m-%d %H:%M")    
     tiempo_estacionado_delta = fecha_salida - fecha_ingreso_DT
     calcular_y_redondeo = tiempo_estacionado_delta.total_seconds() / 60 * tarifa
@@ -116,23 +98,13 @@ def administracion():
     c = conn.cursor()
     c.execute("SELECT * FROM tabla_vehiculos")
     list = c.fetchall()
-    for vehiculo in list:
-        id, patente, nombre, telefono, departamento, fecha_ingreso, fecha_salida, tiempo_estacionado, tarifa, valor_a_pagar, comentario, last_mond = vehiculo
-        print("\n******************************")
-        print(f"id: {id}")
-        print(f"Patente: {patente}")
-        print(f"Nombre: {nombre}")
-        print(f"Teléfono: {telefono}")
-        print(f"Departamento visitado: {departamento}")
-        print(f"Fecha/Hora de Ingreso: {fecha_ingreso}")
-        print(f"Fecha/Hora de Salida: {fecha_salida}")
-        print(f"Tiempo Estacionado: {tiempo_estacionado}")
-        print(f"Tarifa: {tarifa}")
-        print(f"Valor a Pagar: {valor_a_pagar}")
-        print(f"Comentario: {comentario}")
-        print("******************************") 
+##    df = pd.DataFrame(list, columns=['id','patente','nombre','telefono','departamento','fecha_ingreso','fecha_salida','tiempo_estacionado','tarifa','valor_a_pagar','comentario','last_mod'])
+##    print(df)
+    print(tabulate(list, headers=['id','patente','nombre','telefono','departamento','fecha_ingreso','fecha_salida','tiempo_estacionado','tarifa','valor_a_pagar','comentario','last_mod'],
+                   tablefmt='pipe_tables'))
+
 while True:
-    print("==========================================")
+    print("\n==========================================")
     print("Bienvenido al sistema de gestión de vehículos")
     print("------------------------------------------")
     print("\nSeleccione una opción:")
@@ -159,4 +131,3 @@ while True:
         break
     else:
         print("Opción inválida. Por favor, seleccione una opción válida.")
-        
